@@ -1,0 +1,54 @@
+.header{
+    display: flex;
+    height: 40px;
+    padding: 10px;
+    background: #1876d21a;
+    justify-content: space-between;
+    align-items: center;
+}
+.link{
+    text-decoration: none;
+    color: #000;
+}
+.subContent{
+    display: flex;
+    gap: 10px;
+}
+
+.actionContainer{
+    display: flex;
+}
+
+.pointer{
+    cursor: pointer;
+}
+.title{
+    font-size: 14px;
+    font-weight: 600;
+}
+.subtitle{
+    font-size: 12px;
+    color: rgba(128, 128, 128, 0.489)
+}
+.mainContainer{
+    display: flex;
+    flex-direction: column;
+}
+
+.emptyContainer{
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    margin: auto;
+    top: 15%;
+    left: 0;
+    right: 0;
+    bottom: 0;
+}
+
+.mrgT20{
+    margin-top: 20px;
+}
