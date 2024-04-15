@@ -37,6 +37,7 @@ export default function AddJsonFieldDialog() {
   const { fieldType, contentId, fieldName } = useParams();
   const { contentData } = useSelector((state: RootState) => state.content);
   const dispatch = useDispatch<AppDispatch>();
+  const fieldRef = React.useRef<any>(null);
   const [value, setValue] = React.useState<ILanguage | null>();
   const [languageData, setLanguageData] = React.useState<Array<IFieldLanguage>>(
     [{ langaugeCode: "", value: "", languageName: "" }]
@@ -74,27 +75,19 @@ export default function AddJsonFieldDialog() {
     // eslint-disable-next-line
   }, [fieldData]);
 
-  const createContent = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    const formData = new FormData(event.currentTarget);
-    const data: any = Array.from(formData.entries()).reduce(
-      (memo, [key, value]) => ({
-        ...memo,
-        [key]: value,
-      }),
-      {}
-    );
+  const createContent = () => {
+const fieldName:any = document.getElementById("fieldName");
     const fieldData: IField = {
-      fieldName: data["fieldName"],
+      fieldName: fieldName.value || '',
       fieldType: fieldType ?? "",
       langauges: groupBy(languageData, "langaugeCode"),
     };
     const content: IContentField | undefined = contentData.find(
       (content) => content.contentId === contentId
     );
-    if(fieldName)
+    if(fieldData.fieldName)
     {
-      const index = content?.fields?.findIndex((f)=>f.fieldName === fieldName);
+      const index = content?.fields?.findIndex((f)=>f.fieldName === fieldData.fieldName);
       if(index !== -1 && content?.fields?.length)
       {
         const fields:any = Object.assign([],content?.fields);
@@ -152,6 +145,12 @@ export default function AddJsonFieldDialog() {
       setLanguageData(lngData);
     };
   };
+
+  const UpdateJsonData =(data:any, index:number)=>{
+    languageData[index].value = data;
+    const lngData: Array<IFieldLanguage> = Object.assign([], languageData);
+    setLanguageData(lngData);
+  }
   return (
     <div>
       <Modal
@@ -175,7 +174,6 @@ export default function AddJsonFieldDialog() {
             <Divider />
 
             <Box className="inputContainer">
-              <form className="inputContainer" onSubmit={createContent}>
                 <Box className="scrollContainer">
                   <Box>
                     <Typography id="transition-modal-title" className="gap10">
@@ -184,7 +182,12 @@ export default function AddJsonFieldDialog() {
                     <TextField
                       fullWidth
                       name="fieldName"
-                      id="outlined-basic"
+                      type="text"
+                      ref={fieldRef}
+                      inputProps={{
+                        id:"fieldName",
+                        ref:fieldRef
+                      }}
                       variant="outlined"
                       required
                       defaultValue={fieldName}
@@ -231,7 +234,8 @@ export default function AddJsonFieldDialog() {
                             <JsonEditor
                               jsonObject={lang.value}
                               onChange={(output: any) => {
-                                console.log(output);
+                                debugger;
+                                UpdateJsonData(output, index);
                               }}
                             />
                           )}
@@ -246,11 +250,10 @@ export default function AddJsonFieldDialog() {
                   </Button>
                 </Box>
                 <Box className="actionContainer">
-                  <Button variant="contained" type="submit">
+                  <Button variant="contained" type="button" onClick={createContent}>
                     Create
                   </Button>
                 </Box>
-              </form>
             </Box>
           </Box>
         </Fade>
